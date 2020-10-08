@@ -2,5 +2,5 @@ name: Republic
 version: ${project.version}
 main: homebrew.republic.Republic
 api-version: 1.16
-authors: [ Ryxian, Ryxians, HoneyBlocks, HoneyBlox ]
-description: Adding democratic and republican governmental structures to Minecraft.
+authors: [ Ryxian, HoneyBlocks]
+description: ${project.description}
