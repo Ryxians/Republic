@@ -1,5 +1,6 @@
 package homebrew.republic;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Republic extends JavaPlugin {
@@ -14,4 +15,9 @@ public final class Republic extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
+    public static JavaPlugin getInstance() {
+        return (Republic) Bukkit.getPluginManager().getPlugin("Republic");
+    }
+
 }
