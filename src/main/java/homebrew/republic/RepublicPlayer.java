@@ -1,9 +1,12 @@
 package homebrew.republic;
 
+import homebrew.republic.interfaces.Electable;
 import homebrew.republic.party.Party;
 import org.bukkit.entity.Player;
 
-public class RepublicPlayer {
+import java.util.UUID;
+
+public class RepublicPlayer implements Electable {
 
     protected Player player;
     public RepublicPlayer(Player player) {
@@ -25,4 +28,8 @@ public class RepublicPlayer {
         return false;
     }
 
+    @Override
+    public UUID getUniqueId() {
+        return player.getUniqueId();
+    }
 }
