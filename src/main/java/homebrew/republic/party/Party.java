@@ -1,23 +1,19 @@
 package homebrew.republic.party;
 
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
+import homebrew.republic.interfaces.Electable;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.UUID;
 
-public class Party extends PartyManager implements Listener {
+public class Party extends PartyManager implements Listener, Electable {
 
     private String partyName;
-    private String UUID;
+    private UUID id;
+    //private String UUID;
     private Material mat;
     private Player founder;
     public ConfigurationSection thisPartyConf;
@@ -26,8 +22,8 @@ public class Party extends PartyManager implements Listener {
         this.partyName = name;
         for(String partyUUID : PartyManager.partyConfigRoot.getKeys(false)) {
             if (PartyManager.partyConfigRoot.getString(partyUUID + ".name").equals(this.partyName)) {
-                this.UUID = partyUUID;
-                thisPartyConf = PartyManager.partyConfigRoot.getConfigurationSection(UUID);
+                this.id = UUID.fromString(partyUUID);
+                thisPartyConf = PartyManager.partyConfigRoot.getConfigurationSection(id.toString());
             }
         }
     }
@@ -55,7 +51,7 @@ public class Party extends PartyManager implements Listener {
 
     //Overloads method from PartyManager
     public String getPartyUUIDString() {
-        return UUID;
+        return id.toString();
     }
 
    /* public String[] getMembers() {
@@ -69,5 +65,10 @@ public class Party extends PartyManager implements Listener {
         thisPartyConf.set(partyName, name);
         PartyManager.partiesConfigAccessor.saveConfig();
 
+    }
+
+    @Override
+    public java.util.UUID getUniqueId() {
+        return id;
     }
 }

@@ -1,5 +1,6 @@
 package homebrew.republic;
 
+import homebrew.republic.interfaces.Electable;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -8,7 +9,7 @@ import java.util.UUID;
 public class Election {
     // Candidate
     private class Candidate {
-        UUID player;
+        UUID id;
         int votes = 0;
     }
 
@@ -29,9 +30,9 @@ public class Election {
         configAccessor = new ConfigAccessor(plugin, "Election.yml");
     }
 
-    public boolean register(Player player) {
+    public boolean register(Electable electable) {
         Candidate candidate = new Candidate();
-        candidate.player = player.getUniqueId();
+        candidate.id = electable.getUniqueId();
         return insert(candidate);
     }
 
@@ -46,10 +47,10 @@ public class Election {
         return rc;
     }
 
-    private int find(UUID player) {
+    private int find(UUID id) {
         int rc = -1;
         for (int i = 0; i < pop; i++) {
-            if (candidates[i].player == player) {
+            if (candidates[i].id == id) {
                 rc = i;
                 break;
             }
@@ -58,12 +59,12 @@ public class Election {
         return rc;
     }
 
-    public boolean vote(Player player) {
+    public boolean vote(Electable electable) {
         // Get unique id
-        UUID playerU = player.getUniqueId();
+        UUID id = electable.getUniqueId();
 
         // Find candidate in the array
-        int c = find(playerU);
+        int c = find(id);
         boolean rc = false;
 
         // Increase their votes
