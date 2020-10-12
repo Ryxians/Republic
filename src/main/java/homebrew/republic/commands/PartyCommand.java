@@ -16,18 +16,20 @@ public class PartyCommand implements CommandExecutor {
             sender.sendMessage("/party join");
             sender.sendMessage("/party create");
             sender.sendMessage("/party leave");
-        }
-        switch(args[0]) {
-            case "join":
+        } else {
+            switch (args[0]) {
+                case "join":
 
-                break;
-            case "create":
-                new PartyCreate(player, args);
-                break;
-            default:
-                sender.sendMessage(ChatColor.RED + "Not a valid command.");
+                    break;
+                case "create":
+                    new PartyCreate(player, args);
+                    break;
+                case "test":
+                default:
+                    sender.sendMessage(ChatColor.RED + "Not a valid command.");
+            }
         }
-
         return false;
+
     }
 }

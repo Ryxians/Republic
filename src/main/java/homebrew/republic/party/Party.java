@@ -6,10 +6,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import java.util.List;
 import java.util.UUID;
 
-public class Party extends PartyManager implements Listener, Electable {
+public class Party implements Listener, Electable {
 
     private String partyName;
     private UUID id;
@@ -18,7 +17,7 @@ public class Party extends PartyManager implements Listener, Electable {
     private Player founder;
     public ConfigurationSection thisPartyConf;
 
-    public Party(String name) {
+    public Party(String name, int disabled) {
         this.partyName = name;
         for(String partyUUID : PartyManager.partyConfigRoot.getKeys(false)) {
             if (PartyManager.partyConfigRoot.getString(partyUUID + ".name").equals(this.partyName)) {
@@ -26,6 +25,29 @@ public class Party extends PartyManager implements Listener, Electable {
                 thisPartyConf = PartyManager.partyConfigRoot.getConfigurationSection(id.toString());
             }
         }
+    }
+
+    public Party(String name) {
+        this(null, name, Material.STONE);
+    }
+
+    public Party(Player player, String name, Material mat) {
+        this(UUID.randomUUID(), player, name, mat);
+    }
+
+    public Party(UUID uuid, Player player, String name, Material mat) {
+        partyName = name;
+        id = uuid;
+        this.mat = mat;
+        founder = player;
+    }
+
+    public Material getMaterial() {
+        return mat;
+    }
+
+    public Player getFounder() {
+        return founder;
     }
 
 

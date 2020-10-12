@@ -39,6 +39,7 @@ public class PartyGUI implements Listener {
 
 
     private void initializeItems() {
+        /*
             for(String partyName : PartyManager.getPartyConfigRoot().getKeys(false)) {
                 Party p = new Party(partyName);
                 ItemStack item = new ItemStack(p.getPartyItem());
@@ -52,6 +53,8 @@ public class PartyGUI implements Listener {
                 item.setItemMeta(im);
                 inv.addItem(item);
             }
+
+         */
     }
 
 }
