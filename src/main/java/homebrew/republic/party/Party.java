@@ -30,10 +30,15 @@ public class Party implements Listener, Electable {
     }
 
     public Party(UUID uuid, Player player, String name, Material mat) {
+        this(uuid, player, name, mat, "A bad party.");
+    }
+
+    public Party(UUID uuid, Player player, String name, Material mat, String desc) {
         partyName = name;
         id = uuid;
         this.mat = mat;
         founder = player;
+        this.desc = desc;
     }
 
     public ItemStack getItem() {
@@ -42,7 +47,7 @@ public class Party implements Listener, Electable {
         meta.setDisplayName(partyName);
         // about variable will be used for Party descriptions.
         List<String> lore = new LinkedList<>();
-        //lore.add(desc);
+        lore.add(desc);
         lore.add("Founded by: " + founder.getDisplayName());
         meta.setLore(lore);
         partyItem.setItemMeta(meta);
@@ -55,6 +60,14 @@ public class Party implements Listener, Electable {
 
     public Player getFounder() {
         return founder;
+    }
+
+    public String getDescription() {
+        return desc;
+    }
+
+    public void setDescription(String desc) {
+        this.desc = desc;
     }
 
 

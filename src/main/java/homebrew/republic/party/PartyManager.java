@@ -40,6 +40,7 @@ public class PartyManager {
     public static void saveParties() {
         registeredParties.forEach((i, j) -> {
             String str = j.getUniqueId().toString();
+            partyConfigRoot.set(str + ".description", j.getDescription());
             partyConfigRoot.set(str + ".founder", j.getFounder());
             partyConfigRoot.set(str + ".name", j.getName());
             partyConfigRoot.set(str + ".material", j.getMaterial().toString());
@@ -53,7 +54,8 @@ public class PartyManager {
             Player founder = ((OfflinePlayer) partyConfigRoot.get(str + ".founder")).getPlayer();
             String name = (String) partyConfigRoot.get(str + ".name");
             Material mat = Material.getMaterial((String) partyConfigRoot.get(str + ".material"));
-            Party party = new Party(UUID.fromString(i), founder, name, mat);
+            String desc = (String) partyConfigRoot.get(str + ".description");
+            Party party = new Party(UUID.fromString(i), founder, name, mat, desc);
             registerParty(party);
         });
     }
