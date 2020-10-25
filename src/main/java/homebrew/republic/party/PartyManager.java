@@ -3,9 +3,14 @@ package homebrew.republic.party;
 import homebrew.republic.ConfigAccessor;
 import homebrew.republic.Republic;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 public class PartyManager {
@@ -14,6 +19,9 @@ public class PartyManager {
     static HashMap<String, Party> registeredParties = new HashMap<>();
     static final ConfigAccessor partiesConfigAccessor = new ConfigAccessor(Republic.getInstance(), "Parties.yml");
     static ConfigurationSection partyConfigRoot = partiesConfigAccessor.getConfig();
+
+    // Party Creation Inventories
+    static List<Inventory> inventories = new LinkedList<Inventory>();
 
 
     public PartyManager() {
@@ -36,7 +44,7 @@ public class PartyManager {
     public static void loadParties() {
         partyConfigRoot.getKeys(false).forEach((i) -> {
             String str = i.toString();
-            Player founder = (Player) partyConfigRoot.get(str + ".founder");
+            Player founder = ((OfflinePlayer) partyConfigRoot.get(str + ".founder")).getPlayer();
             String name = (String) partyConfigRoot.get(str + ".name");
             Material mat = Material.getMaterial((String) partyConfigRoot.get(str + ".material"));
             Party party = new Party(UUID.fromString(i), founder, name, mat);
@@ -57,10 +65,6 @@ public class PartyManager {
         return registeredParties.containsKey(party);
     }
 
-
-    public void joinParty(Player p) {
-        //TODO
-    }
 
 
     public static ConfigurationSection getPartyConfigRoot() {

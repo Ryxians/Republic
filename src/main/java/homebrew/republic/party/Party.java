@@ -17,16 +17,6 @@ public class Party implements Listener, Electable {
     private Player founder;
     public ConfigurationSection thisPartyConf;
 
-    public Party(String name, int disabled) {
-        this.partyName = name;
-        for(String partyUUID : PartyManager.partyConfigRoot.getKeys(false)) {
-            if (PartyManager.partyConfigRoot.getString(partyUUID + ".name").equals(this.partyName)) {
-                this.id = UUID.fromString(partyUUID);
-                thisPartyConf = PartyManager.partyConfigRoot.getConfigurationSection(id.toString());
-            }
-        }
-    }
-
     public Party(String name) {
         this(null, name, Material.STONE);
     }

@@ -29,7 +29,7 @@ public class PartyCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Not a valid command.");
             }
         }
-        return false;
+        return true;
 
     }
 }
