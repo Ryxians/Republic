@@ -2,6 +2,7 @@ package homebrew.republic.party;
 
 import homebrew.republic.ConfigAccessor;
 import homebrew.republic.Republic;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,8 +28,13 @@ public class PartyManager {
     public PartyManager() {
     }
 
-    public static void registerParty(Party party) {
-        registeredParties.put(party.getName(), party);
+    public static boolean registerParty(Party party) {
+        boolean rc = false;
+        if (registeredParties.size() < MAX_PARTIES) {
+            registeredParties.put(party.getName(), party);
+            rc = true;
+        }
+        return rc;
     }
 
     public static void saveParties() {
@@ -69,6 +75,15 @@ public class PartyManager {
 
     public static ConfigurationSection getPartyConfigRoot() {
         return partyConfigRoot;
+    }
+
+    public static Inventory getPartyView() {
+        Inventory inv = Bukkit.createInventory(null, 9);
+        registeredParties.forEach((i, j) -> {
+            inv.addItem(j.getItem());
+                }
+        );
+        return inv;
     }
 
 }

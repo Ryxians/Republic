@@ -1,6 +1,7 @@
 package homebrew.republic.commands;
 
 import homebrew.republic.party.Party;
+import homebrew.republic.party.PartyManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,7 @@ public class PartyCommand implements CommandExecutor {
         } else {
             switch (args[0]) {
                 case "join":
-
+                    player.openInventory(PartyManager.getPartyView());
                     break;
                 case "create":
                     new PartyCreate(player, args);

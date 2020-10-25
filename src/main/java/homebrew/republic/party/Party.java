@@ -5,14 +5,18 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 public class Party implements Listener, Electable {
 
     private String partyName;
     private UUID id;
-    //private String UUID;
+    private String desc;
     private Material mat;
     private Player founder;
     public ConfigurationSection thisPartyConf;
@@ -30,6 +34,19 @@ public class Party implements Listener, Electable {
         id = uuid;
         this.mat = mat;
         founder = player;
+    }
+
+    public ItemStack getItem() {
+        ItemStack partyItem = new ItemStack(mat);
+        ItemMeta meta = partyItem.getItemMeta();
+        meta.setDisplayName(partyName);
+        // about variable will be used for Party descriptions.
+        List<String> lore = new LinkedList<>();
+        //lore.add(desc);
+        lore.add("Founded by: " + founder.getDisplayName());
+        meta.setLore(lore);
+        partyItem.setItemMeta(meta);
+        return partyItem;
     }
 
     public Material getMaterial() {
