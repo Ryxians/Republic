@@ -15,7 +15,6 @@ public final class Republic extends JavaPlugin {
         //Registers all parties in parties.yml; initializes objects in HashMap<Party party, String uuid>
         pm = new PartyManager();
         PartyManager.loadParties();
-
         pcm = new PartyCreationMenu(this);
         //pm.registerParties();
         // Plugin startup logic

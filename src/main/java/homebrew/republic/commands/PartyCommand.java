@@ -3,6 +3,7 @@ package homebrew.republic.commands;
 import homebrew.republic.party.Party;
 import homebrew.republic.party.PartyManager;
 import net.md_5.bungee.api.ChatColor;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,6 +27,7 @@ public class PartyCommand implements CommandExecutor {
                     new PartyCreate(player, args);
                     break;
                 case "test":
+                    break;
                 default:
                     sender.sendMessage(ChatColor.RED + "Not a valid command.");
             }
