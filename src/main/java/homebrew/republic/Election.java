@@ -10,7 +10,11 @@ public class Election {
     // Candidate
     private class Candidate {
         UUID id;
+        Electable electable;
         int votes = 0;
+        Candidate(UUID id) {
+            this.id = id;
+        }
     }
 
 
@@ -31,8 +35,8 @@ public class Election {
     }
 
     public boolean register(Electable electable) {
-        Candidate candidate = new Candidate();
-        candidate.id = electable.getUniqueId();
+        Candidate candidate = new Candidate(electable.getUniqueId());
+        candidate.electable = electable;
         return insert(candidate);
     }
 
@@ -89,6 +93,10 @@ public class Election {
             candidates[index - 1] = temp;
             sort(index--);
         }
+    }
+
+    public UUID getBest() {
+        return candidates[0].id;
     }
 
 }

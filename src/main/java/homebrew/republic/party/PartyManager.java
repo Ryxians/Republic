@@ -1,7 +1,9 @@
 package homebrew.republic.party;
 
 import homebrew.republic.ConfigAccessor;
+import homebrew.republic.Election;
 import homebrew.republic.Republic;
+import homebrew.republic.interfaces.Electable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -9,10 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PartyManager {
     //STATIC
@@ -20,6 +19,7 @@ public class PartyManager {
     static HashMap<String, Party> registeredParties = new HashMap<>();
     static final ConfigAccessor partiesConfigAccessor = new ConfigAccessor(Republic.getInstance(), "Parties.yml");
     static ConfigurationSection partyConfigRoot = partiesConfigAccessor.getConfig();
+    static Election election;
 
     // Party Creation Inventories
     static List<Inventory> inventories = new LinkedList<Inventory>();
@@ -86,6 +86,37 @@ public class PartyManager {
                 }
         );
         return inv;
+    }
+
+    private static Election createElection() {
+        Election election = new Election(Republic.getInstance());
+        registeredParties.forEach((i, j) -> {
+            election.register(j);
+        });
+        return election;
+    }
+
+    public static void addVote(Party party) {
+        if (election == null) {
+            election = createElection();
+        }
+        election.vote(party);
+        getWinner();
+    }
+
+    public static void getWinner() {
+        Bukkit.getServer().broadcastMessage("The winner: " + election.getBest().toString());
+    }
+
+    public static Party getParty(String name) {
+        Party rc = null;
+        for (Map.Entry<String, Party> entry : registeredParties.entrySet()) {
+            if (entry.getKey().equals(name)) {
+                rc = entry.getValue();
+                break;
+            }
+        }
+        return rc;
     }
 
 }

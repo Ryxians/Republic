@@ -31,6 +31,14 @@ public class PartyCommand implements CommandExecutor {
                 case "list":
                     ((Player) sender).openInventory(PartyManager.getPartyView());
                     break;
+                case "vote":
+                    Party party = PartyManager.getParty(args[1]);
+                    if (party != null) {
+                        PartyManager.addVote(party);
+                    }
+                    else
+                        player.sendMessage("Not a party.");
+                    break;
                 default:
                     sender.sendMessage(ChatColor.RED + "Not a valid command.");
             }
