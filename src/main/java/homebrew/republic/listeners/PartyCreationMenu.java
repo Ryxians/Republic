@@ -71,13 +71,16 @@ public class PartyCreationMenu {
     }
 
     public Inventory createMenu() {
+        return createMenu("Teset");
+    }
+    public Inventory createMenu(String name) {
         Inventory inv = Bukkit.createInventory(null, 9, "Party Creation");
         List<String> lore = new LinkedList<>();
 
         // Thingy for renaming
         ItemStack anvil = new ItemStack(Material.ANVIL);
         ItemMeta meta = anvil.getItemMeta();
-        meta.setDisplayName("Teset");
+        meta.setDisplayName(name);
         lore.add("Click this to change the party name!");
         meta.setLore(lore);
         anvil.setItemMeta(meta);
@@ -85,7 +88,7 @@ public class PartyCreationMenu {
         // Thing for representation
         ItemStack item = new ItemStack(Material.ACACIA_BOAT);
         meta = item.getItemMeta();
-        meta.setDisplayName("Teset");
+        meta.setDisplayName(name);
         lore.clear();
         lore.add("The grand first party.");
         meta.setLore(lore);

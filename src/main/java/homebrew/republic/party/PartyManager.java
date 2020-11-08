@@ -41,7 +41,7 @@ public class PartyManager {
         registeredParties.forEach((i, j) -> {
             String str = j.getUniqueId().toString();
             partyConfigRoot.set(str + ".description", j.getDescription());
-            partyConfigRoot.set(str + ".founder", j.getFounder());
+            partyConfigRoot.set(str + ".founder", j.getFounderUUID().toString());
             partyConfigRoot.set(str + ".name", j.getName());
             partyConfigRoot.set(str + ".material", j.getMaterial().toString());
         });
@@ -51,7 +51,7 @@ public class PartyManager {
     public static void loadParties() {
         partyConfigRoot.getKeys(false).forEach((i) -> {
             String str = i.toString();
-            Player founder = ((OfflinePlayer) partyConfigRoot.get(str + ".founder")).getPlayer();
+            UUID founder = UUID.fromString((String) partyConfigRoot.get(str + ".founder"));
             String name = (String) partyConfigRoot.get(str + ".name");
             Material mat = Material.getMaterial((String) partyConfigRoot.get(str + ".material"));
             String desc = (String) partyConfigRoot.get(str + ".description");

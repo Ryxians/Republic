@@ -1,6 +1,7 @@
 package homebrew.republic.party;
 
 import homebrew.republic.interfaces.Electable;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ public class Party implements Listener, Electable {
     private UUID id;
     private String desc;
     private Material mat;
-    private Player founder;
+    private UUID founder;
     public ConfigurationSection thisPartyConf;
 
     public Party(String name) {
@@ -30,10 +31,10 @@ public class Party implements Listener, Electable {
     }
 
     public Party(UUID uuid, Player player, String name, Material mat) {
-        this(uuid, player, name, mat, "A bad party.");
+        this(uuid, player.getUniqueId(), name, mat, "A bad party.");
     }
 
-    public Party(UUID uuid, Player player, String name, Material mat, String desc) {
+    public Party(UUID uuid, UUID player, String name, Material mat, String desc) {
         partyName = name;
         id = uuid;
         this.mat = mat;
@@ -48,7 +49,7 @@ public class Party implements Listener, Electable {
         // about variable will be used for Party descriptions.
         List<String> lore = new LinkedList<>();
         lore.add(desc);
-        lore.add("Founded by: " + founder.getDisplayName());
+        lore.add("Founded by: " + getFounder().getDisplayName());
         meta.setLore(lore);
         partyItem.setItemMeta(meta);
         return partyItem;
@@ -59,6 +60,10 @@ public class Party implements Listener, Electable {
     }
 
     public Player getFounder() {
+        return Bukkit.getPlayer(founder);
+    }
+
+    public UUID getFounderUUID() {
         return founder;
     }
 

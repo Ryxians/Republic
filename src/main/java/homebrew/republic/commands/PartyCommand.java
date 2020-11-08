@@ -28,6 +28,9 @@ public class PartyCommand implements CommandExecutor {
                     break;
                 case "test":
                     break;
+                case "list":
+                    ((Player) sender).openInventory(PartyManager.getPartyView());
+                    break;
                 default:
                     sender.sendMessage(ChatColor.RED + "Not a valid command.");
             }
