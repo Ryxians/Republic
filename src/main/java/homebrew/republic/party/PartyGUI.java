@@ -26,12 +26,7 @@ public class PartyGUI implements Listener {
     void onInventoryClick(InventoryClickEvent e) {
         if(e.getView().getTitle().equals(ChatColor.AQUA + "Party Selector")) {
             if(!(e.getCurrentItem()==null)) {
-                for (String partyName : PartyManager.getPartyConfigRoot().getKeys(false)) {
-                    if (e.getCurrentItem().getItemMeta().getDisplayName().equals(partyName)) {
-                        Player p = (Player) e.getWhoClicked();
-                        //joinParty(p);
-                    }
-                }
+                // Party GUI Logic
             }
         }
         e.setCancelled(true);

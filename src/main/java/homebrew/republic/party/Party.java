@@ -20,7 +20,6 @@ public class Party implements Listener, Electable {
     private String desc;
     private Material mat;
     private UUID founder;
-    public ConfigurationSection thisPartyConf;
 
     public Party(String name) {
         this(null, name, Material.STONE);
@@ -85,11 +84,11 @@ public class Party implements Listener, Electable {
 
     //Party getters
     public String getPartyFounder() {
-       return thisPartyConf.getString(".founder");
+       return founder.toString();
     }
 
     public Material getPartyItem() {
-       return mat = Material.getMaterial(thisPartyConf.getString(".material"));
+       return mat;
     }
 
     public String getName() {
@@ -109,8 +108,9 @@ public class Party implements Listener, Electable {
 
     public void setName(String name) {
         partyName = name;
-        thisPartyConf.set(partyName, name);
-        PartyManager.partiesConfigAccessor.saveConfig();
+        if (!PartyManager.getConfig().updatePartyName(this, name)) {
+            System.out.println("Party name change failed.");
+        }
 
     }
 

@@ -4,6 +4,8 @@ import homebrew.republic.ConfigAccessor;
 import homebrew.republic.Election;
 import homebrew.republic.Republic;
 import homebrew.republic.interfaces.Electable;
+import homebrew.republic.interfaces.PartyConfig;
+import homebrew.republic.yml.PartyYML;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -14,21 +16,34 @@ import org.bukkit.inventory.Inventory;
 import java.util.*;
 
 public class PartyManager {
-    //STATIC
+    // STATIC
+    private static boolean init = false;
     static final int MAX_PARTIES = 9;
     static HashMap<String, Party> registeredParties = new HashMap<>();
-    static final ConfigAccessor partiesConfigAccessor = new ConfigAccessor(Republic.getInstance(), "Parties.yml");
-    static ConfigurationSection partyConfigRoot = partiesConfigAccessor.getConfig();
     static Election election;
 
     // Party Creation Inventories
     static List<Inventory> inventories = new LinkedList<Inventory>();
 
+    private static PartyConfig config;
+
 
     public PartyManager() {
+        init();
+    }
+
+    // Initialize without constructing.
+    public static void init() {
+        // Future implementation of other config types
+        if (true) {
+            config = new PartyYML();
+        }
+        //STATIC
+        init = true;
     }
 
     public static boolean registerParty(Party party) {
+
         boolean rc = false;
         if (registeredParties.size() < MAX_PARTIES) {
             registeredParties.put(party.getName(), party);
@@ -38,48 +53,29 @@ public class PartyManager {
     }
 
     public static void saveParties() {
-        registeredParties.forEach((i, j) -> {
-            String str = j.getUniqueId().toString();
-            partyConfigRoot.set(str + ".description", j.getDescription());
-            partyConfigRoot.set(str + ".founder", j.getFounderUUID().toString());
-            partyConfigRoot.set(str + ".name", j.getName());
-            partyConfigRoot.set(str + ".material", j.getMaterial().toString());
-        });
-        partiesConfigAccessor.saveConfig();
+
+        config.saveParties(registeredParties);
     }
 
     public static void loadParties() {
-        partyConfigRoot.getKeys(false).forEach((i) -> {
-            String str = i.toString();
-            UUID founder = UUID.fromString((String) partyConfigRoot.get(str + ".founder"));
-            String name = (String) partyConfigRoot.get(str + ".name");
-            Material mat = Material.getMaterial((String) partyConfigRoot.get(str + ".material"));
-            String desc = (String) partyConfigRoot.get(str + ".description");
-            Party party = new Party(UUID.fromString(i), founder, name, mat, desc);
-            registerParty(party);
-        });
+
+        config.loadParties();
     }
 
 
     public void deleteParty(Party party) {
-        //TODO remove players from party, then delete
 
-        getPartyConfigRoot().set(party.getPartyUUIDString(), null);
-        partiesConfigAccessor.saveConfig();
+        config.deleteParty(party);
     }
 
 
     public boolean isRegistered(Party party) {
+
         return registeredParties.containsKey(party);
     }
 
-
-
-    public static ConfigurationSection getPartyConfigRoot() {
-        return partyConfigRoot;
-    }
-
     public static Inventory getPartyView() {
+
         Inventory inv = Bukkit.createInventory(null, 9);
         registeredParties.forEach((i, j) -> {
             inv.addItem(j.getItem());
@@ -89,6 +85,7 @@ public class PartyManager {
     }
 
     private static Election createElection() {
+
         Election election = new Election(Republic.getInstance());
         registeredParties.forEach((i, j) -> {
             election.register(j);
@@ -117,6 +114,10 @@ public class PartyManager {
             }
         }
         return rc;
+    }
+
+    public static PartyConfig getConfig() {
+        return config;
     }
 
 }
