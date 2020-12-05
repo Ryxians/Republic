@@ -21,6 +21,7 @@ public class PartyManager {
     static final int MAX_PARTIES = 9;
     static HashMap<String, Party> registeredParties = new HashMap<>();
     static Election election;
+    private static int TOPID;
 
     // Party Creation Inventories
     static List<Inventory> inventories = new LinkedList<Inventory>();
@@ -102,7 +103,7 @@ public class PartyManager {
     }
 
     public static void getWinner() {
-        Bukkit.getServer().broadcastMessage("The winner: " + election.getBest().toString());
+        Bukkit.getServer().broadcastMessage("The winner: " + election.getBest());
     }
 
     public static Party getParty(String name) {
@@ -118,6 +119,22 @@ public class PartyManager {
 
     public static PartyConfig getConfig() {
         return config;
+    }
+
+    public static int getTOPID() {
+        return getTopID(true);
+    }
+
+    public static int getTopID(boolean increment) {
+        if (increment) {
+            return TOPID++;
+        } else {
+            return TOPID;
+        }
+    }
+
+    public static void setTOPID(int id) {
+        TOPID = id;
     }
 
 }

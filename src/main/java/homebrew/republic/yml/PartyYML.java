@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PartyYML implements PartyConfig {
 
@@ -22,11 +23,11 @@ public class PartyYML implements PartyConfig {
     @Override
     public boolean saveParties(HashMap<String, Party> registeredParties) {
         registeredParties.forEach((i, j) -> {
-            String str = j.getUniqueId().toString();
-            partyConfigRoot.set(str + ".description", j.getDescription());
-            partyConfigRoot.set(str + ".founder", j.getFounderUUID().toString());
-            partyConfigRoot.set(str + ".name", j.getName());
-            partyConfigRoot.set(str + ".material", j.getMaterial().toString());
+            int id = j.getID();
+            partyConfigRoot.set(id + ".description", j.getDescription());
+            partyConfigRoot.set(id + ".founder", j.getFounderUUID().toString());
+            partyConfigRoot.set(id + ".name", j.getName());
+            partyConfigRoot.set(id + ".material", j.getMaterial().toString());
         });
         partiesConfigAccessor.saveConfig();
         return true;
@@ -34,21 +35,26 @@ public class PartyYML implements PartyConfig {
 
     @Override
     public void loadParties() {
+
         partyConfigRoot.getKeys(false).forEach((i) -> {
-            String str = i.toString();
-            UUID founder = UUID.fromString((String) partyConfigRoot.get(str + ".founder"));
-            String name = (String) partyConfigRoot.get(str + ".name");
-            Material mat = Material.getMaterial((String) partyConfigRoot.get(str + ".material"));
-            String desc = (String) partyConfigRoot.get(str + ".description");
-            Party party = new Party(UUID.fromString(i), founder, name, mat, desc);
+            int id = Integer.parseInt(i);
+            UUID founder = UUID.fromString((String) partyConfigRoot.get(id + ".founder"));
+            String name = (String) partyConfigRoot.get(id + ".name");
+            Material mat = Material.getMaterial((String) partyConfigRoot.get(id + ".material"));
+            String desc = (String) partyConfigRoot.get(id + ".description");
+            Party party = new Party(id, founder, name, mat, desc);
             PartyManager.registerParty(party);
+            if (PartyManager.getTopID(false) < id) {
+                PartyManager.setTOPID(id);
+            }
         });
+
     }
 
     @Override
     public boolean deleteParty(Party party) {
         //TODO remove players from party, then delete
-        partyConfigRoot.set(party.getPartyUUIDString(), null);
+        partyConfigRoot.set(party.getPartyIDString(), null);
         partiesConfigAccessor.saveConfig();
         return true;
     }

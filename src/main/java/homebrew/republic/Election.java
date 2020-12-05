@@ -6,16 +6,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 
-public class Election {
-    // Candidate
-    private class Candidate {
-        UUID id;
-        Electable electable;
-        int votes = 0;
-        Candidate(UUID id) {
-            this.id = id;
-        }
+class Candidate {
+    Object electable;
+    int votes = 0;
+    Candidate(Object electable){
+        this.electable = electable;
     }
+}
+public class Election<T> {
+    // Candidate
 
 
     // Config access
@@ -34,9 +33,8 @@ public class Election {
         configAccessor = new ConfigAccessor(plugin, "Election.yml");
     }
 
-    public boolean register(Electable electable) {
-        Candidate candidate = new Candidate(electable.getUniqueId());
-        candidate.electable = electable;
+    public boolean register(T t) {
+        Candidate candidate = new Candidate(t);
         return insert(candidate);
     }
 
@@ -51,10 +49,10 @@ public class Election {
         return rc;
     }
 
-    private int find(UUID id) {
+    private int find(T t) {
         int rc = -1;
         for (int i = 0; i < pop; i++) {
-            if (candidates[i].id == id) {
+            if ((candidates[i]).electable == t) {
                 rc = i;
                 break;
             }
@@ -63,12 +61,10 @@ public class Election {
         return rc;
     }
 
-    public boolean vote(Electable electable) {
-        // Get unique id
-        UUID id = electable.getUniqueId();
+    public boolean vote(T t) {
 
         // Find candidate in the array
-        int c = find(id);
+        int c = find(t);
         boolean rc = false;
 
         // Increase their votes
@@ -95,8 +91,8 @@ public class Election {
         }
     }
 
-    public UUID getBest() {
-        return candidates[0].id;
+    public T getBest() {
+        return (T) candidates[0].electable;
     }
 
 }

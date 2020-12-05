@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Party implements Listener, Electable {
 
     private String partyName;
-    private UUID id;
+    private int id;
     private String desc;
     private Material mat;
     private UUID founder;
@@ -26,16 +26,16 @@ public class Party implements Listener, Electable {
     }
 
     public Party(Player player, String name, Material mat) {
-        this(UUID.randomUUID(), player, name, mat);
+        this(PartyManager.getTOPID(), player, name, mat);
     }
 
-    public Party(UUID uuid, Player player, String name, Material mat) {
-        this(uuid, player.getUniqueId(), name, mat, "A bad party.");
+    public Party(int id, Player player, String name, Material mat) {
+        this(id, player.getUniqueId(), name, mat, "A bad party.");
     }
 
-    public Party(UUID uuid, UUID player, String name, Material mat, String desc) {
+    public Party(int id, UUID player, String name, Material mat, String desc) {
         partyName = name;
-        id = uuid;
+        this.id = id;
         this.mat = mat;
         founder = player;
         this.desc = desc;
@@ -96,8 +96,8 @@ public class Party implements Listener, Electable {
     }
 
     //Overloads method from PartyManager
-    public String getPartyUUIDString() {
-        return id.toString();
+    public String getPartyIDString() {
+        return String.valueOf(id);
     }
 
    /* public String[] getMembers() {
@@ -115,7 +115,7 @@ public class Party implements Listener, Electable {
     }
 
     @Override
-    public java.util.UUID getUniqueId() {
+    public int getID() {
         return id;
     }
 }

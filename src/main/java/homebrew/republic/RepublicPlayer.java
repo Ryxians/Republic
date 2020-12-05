@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class RepublicPlayer implements Electable {
+public class RepublicPlayer {
 
     protected Player player;
     public RepublicPlayer(Player player) {
@@ -26,10 +26,5 @@ public class RepublicPlayer implements Electable {
 
     public boolean isAdmin() {
         return false;
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return player.getUniqueId();
     }
 }
