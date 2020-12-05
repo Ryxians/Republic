@@ -35,7 +35,6 @@ public class PartyYML implements PartyConfig {
 
     @Override
     public void loadParties() {
-
         partyConfigRoot.getKeys(false).forEach((i) -> {
             int id = Integer.parseInt(i);
             UUID founder = UUID.fromString((String) partyConfigRoot.get(id + ".founder"));

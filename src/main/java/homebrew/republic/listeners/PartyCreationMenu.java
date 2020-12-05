@@ -30,21 +30,35 @@ public class PartyCreationMenu implements Listener {
         @EventHandler
         public void inventoryInteraction(InventoryClickEvent evt) {
             if (!evt.isCancelled()) {
+                // In development sometimes a null player would exist
+                // If this occurs before an error then clearly I haven't fixed it
+                // :(
                 if (player == null) System.out.println("NO PLAYER");
                 if (player.equals(evt.getWhoClicked())) {
+                    // The item the player has clicked
                     ItemStack item = evt.getCurrentItem();
-                    if (item == null) {
-
-                    } else if (item.equals(anvil)) {
+                    if (item == null);
+                    else if (item.equals(anvil)) {
                         player.closeInventory();
                         AnvilGUI.Builder builder = new AnvilGUI.Builder();
                         builder.item(ref);
                         builder.text("Rename me!");
                         builder.plugin(plugin);
                         builder.onComplete((player, text) -> {
+                            // Changes the Reference name to the name
+                            // chosen by the player
                             ItemMeta meta = ref.getItemMeta();
                             meta.setDisplayName(text);
                             ref.setItemMeta(meta);
+
+                            // Changes the Anvil name to the name
+                            // Chosen by the player
+                            meta = anvil.getItemMeta();
+                            meta.setDisplayName(text);
+                            anvil.setItemMeta(meta);
+
+                            // Reopen a new and updated
+                            // Creation menu
                             player.openInventory(recreateMenu());
                             return AnvilGUI.Response.close();
                         });
@@ -94,43 +108,53 @@ public class PartyCreationMenu implements Listener {
     }
 
     public Inventory recreateMenu() {
+        // Generate a 9 wide inventory, a slot for each party
         Inventory inv = Bukkit.createInventory(null, 9, "Party Creation");
 
         inv.setItem(0, anvil);
-        inv.setItem(2, ref);
+        inv.setItem(6, ref);
         inv.setItem(8, complete);
         return inv;
     }
     public Inventory createMenu(String name) {
-        //Inventory inv = Bukkit.createInventory(null, 9, "Party Creation");
+        // Lore Linked List for Menu item descriptions
         List<String> lore = new LinkedList<>();
 
-        // Thingy for renaming
+        // The Anvil Shall have the following characteristics
+        // Name: {Party Name}, Default: Teset
+        // Lore: Click this to change the party name!
         anvil = new ItemStack(Material.ANVIL);
         ItemMeta meta = anvil.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(name);
         lore.add("Click this to change the party name!");
         meta.setLore(lore);
         anvil.setItemMeta(meta);
 
-        // Thing for representation
+        // A representation of the party being created
+        // By default it will look like an Acacia Boat
+        // Name: {Party Name}, Default: Teset
+        // Lore: {Party Lore}, Default: The grand first party.
         ref = new ItemStack(Material.ACACIA_BOAT);
         meta = ref.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(name);
         lore.clear();
         lore.add("The grand first party.");
         meta.setLore(lore);
         ref.setItemMeta(meta);
 
-        // Thingy for done
+        // The finish button
+        // Name: Complete
+        // Lore: Click this to create your party!
         complete = new ItemStack(Material.EMERALD);
         meta = complete.getItemMeta();
+        assert meta != null;
         meta.setDisplayName("Complete");
+        lore.clear();
+        lore.add("Click this to create your party!");
         complete.setItemMeta(meta);
 
-        //inv.setItem(0, anvil);
-        //inv.setItem(2, ref);
-        //inv.setItem(8, complete);
         return recreateMenu();
     }
 }
