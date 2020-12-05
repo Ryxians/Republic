@@ -18,10 +18,11 @@ public class PartyCreate{
     public PartyCreate(Player player, String[] args) {
         this.player = player;
         this.args = args;
-        pcm = Republic.getPartyMenu();
+        //pcm = Republic.getPartyMenu();
+        pcm = new PartyCreationMenu(Republic.getInstance(), player);
 
         Inventory partyCreation = pcm.createMenu();
-        pcm.addMenu(partyCreation);
+        // pcm.addMenu(partyCreation);
         player.openInventory(partyCreation);
         //PartyManager.registerParty(new Party(player, "Teset", Material.ACACIA_BOAT));
     }
