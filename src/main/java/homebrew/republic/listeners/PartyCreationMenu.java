@@ -22,7 +22,8 @@ import java.util.List;
 public class PartyCreationMenu implements Listener {
     JavaPlugin plugin;
     Player player;
-    ItemStack anvil;
+    ItemStack rename;
+    ItemStack desc;
     ItemStack ref;
     ItemStack complete;
     boolean isClosed = false;
@@ -38,44 +39,82 @@ public class PartyCreationMenu implements Listener {
                     // The item the player has clicked
                     ItemStack item = evt.getCurrentItem();
                     if (item == null);
-                    else if (item.equals(anvil)) {
-                        player.closeInventory();
-                        AnvilGUI.Builder builder = new AnvilGUI.Builder();
-                        builder.item(ref);
-                        builder.text("Rename me!");
-                        builder.plugin(plugin);
-                        builder.onComplete((player, text) -> {
-                            // Changes the Reference name to the name
-                            // chosen by the player
-                            ItemMeta meta = ref.getItemMeta();
-                            meta.setDisplayName(text);
-                            ref.setItemMeta(meta);
-
-                            // Changes the Anvil name to the name
-                            // Chosen by the player
-                            meta = anvil.getItemMeta();
-                            meta.setDisplayName(text);
-                            anvil.setItemMeta(meta);
-
-                            // Reopen a new and updated
-                            // Creation menu
-                            player.openInventory(recreateMenu());
-                            return AnvilGUI.Response.close();
-                        });
-                        builder.open(player);
+                    else if (item.equals(rename)) {
+                        // For reading purposes, stored in method
+                        rename();
+                    } else if (item.equals(desc)) {
+                        // For reading purposes, stored in method
+                        description();
                     } else if (item.equals(ref)) {
                         player.sendMessage("This is the party reference");
                     } else if (item.equals(complete)) {
-                        ItemStack[] contents = evt.getInventory().getContents();
                         ItemMeta meta = ref.getItemMeta();
                         String name = meta.getDisplayName();
+                        String description = desc.getItemMeta().getLore().get(0);
                         Material mat = ref.getType();
-                        PartyManager.registerParty(new Party(player, name, mat));
-                        player.closeInventory();
+                        PartyManager.registerParty(new Party(player, name, mat, description));
+                        closeCreateMenu();
                     }
                     evt.setCancelled(true);
                 }
             }
+        }
+
+        private void rename() {
+            isClosed = false;
+            player.closeInventory();
+            AnvilGUI.Builder builder = new AnvilGUI.Builder();
+            builder.item(ref);
+            builder.text("Rename me!");
+            builder.plugin(plugin);
+            builder.onComplete((player, text) -> {
+                // Changes the Reference name to the name
+                // chosen by the player
+                ItemMeta meta = ref.getItemMeta();
+                meta.setDisplayName(text);
+                ref.setItemMeta(meta);
+
+                // Changes the Anvil name to the name
+                // Chosen by the player
+                meta = rename.getItemMeta();
+                meta.setDisplayName(text);
+                rename.setItemMeta(meta);
+
+                // Reopen a new and updated
+                // Creation menu
+                player.openInventory(recreateMenu());
+                return AnvilGUI.Response.close();
+            });
+            builder.open(player);
+        }
+
+        private void description() {
+            player.closeInventory();
+            AnvilGUI.Builder builder = new AnvilGUI.Builder();
+            builder.item(ref);
+            builder.text("Change me!");
+            builder.plugin(plugin);
+            builder.onComplete((player, text) -> {
+                // Changes the Reference description to the description
+                // chosen by the player
+                ItemMeta meta = ref.getItemMeta();
+                List<String> lore = new LinkedList<>();
+                lore.add(text);
+                meta.setLore(lore);
+                ref.setItemMeta(meta);
+
+                // Changes the Anvil description to the description
+                // Chosen by the player
+                meta = desc.getItemMeta();
+                meta.setLore(lore);
+                desc.setItemMeta(meta);
+
+                // Reopen a new and updated
+                // Creation menu
+                player.openInventory(recreateMenu());
+                return AnvilGUI.Response.close();
+            });
+            builder.open(player);
         }
 
         @EventHandler
@@ -101,6 +140,7 @@ public class PartyCreationMenu implements Listener {
 
     public void closeCreateMenu() {
         HandlerList.unregisterAll(this);
+        player.closeInventory();
     }
 
     public Inventory createMenu() {
@@ -111,7 +151,8 @@ public class PartyCreationMenu implements Listener {
         // Generate a 9 wide inventory, a slot for each party
         Inventory inv = Bukkit.createInventory(null, 9, "Party Creation");
 
-        inv.setItem(0, anvil);
+        inv.setItem(0, rename);
+        //inv.setItem(1, desc);
         inv.setItem(6, ref);
         inv.setItem(8, complete);
         return inv;
@@ -123,13 +164,25 @@ public class PartyCreationMenu implements Listener {
         // The Anvil Shall have the following characteristics
         // Name: {Party Name}, Default: Teset
         // Lore: Click this to change the party name!
-        anvil = new ItemStack(Material.ANVIL);
-        ItemMeta meta = anvil.getItemMeta();
+        rename = new ItemStack(Material.ANVIL);
+        ItemMeta meta = rename.getItemMeta();
         assert meta != null;
         meta.setDisplayName(name);
         lore.add("Click this to change the party name!");
         meta.setLore(lore);
-        anvil.setItemMeta(meta);
+        rename.setItemMeta(meta);
+
+        // The Description Anvil shall have the following characteristics
+        // Name: Description
+        // Lore: Click this to change your party description!
+        desc = new ItemStack(Material.ANVIL);
+        meta = rename.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName("Description");
+        lore.clear();
+        lore.add("Click this to change your party description!");
+        meta.setLore(lore);
+        desc.setItemMeta(meta);
 
         // A representation of the party being created
         // By default it will look like an Acacia Boat

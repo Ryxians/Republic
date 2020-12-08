@@ -29,6 +29,10 @@ public class Party implements Listener, Electable {
         this(PartyManager.getTOPID(), player, name, mat);
     }
 
+    public Party(Player player, String name, Material mat, String desc) {
+        this(PartyManager.getTOPID(), player.getUniqueId(), name, mat, desc);
+    }
+
     public Party(int id, Player player, String name, Material mat) {
         this(id, player.getUniqueId(), name, mat, "A bad party.");
     }
